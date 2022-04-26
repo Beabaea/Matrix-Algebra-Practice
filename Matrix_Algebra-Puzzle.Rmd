@@ -18,7 +18,7 @@ Run the following code chunk to load up your matrix (M), and to generate some ra
 ```{r}
 ### DO NOT CHANGE ANYTHING IN THIS CODE CHUNK!!!
 
-M = read.csv("img.txt", header = FALSE)
+M = read.csv(here::here("img.txt"), header = FALSE)
 M = as.matrix(M)
 
 
@@ -48,13 +48,13 @@ When you are asked to do something to the matrix M, make sure you save the updat
 
 ```{r, eval = FALSE}
 # Correct step:
-M <- M %*% A
+ M <- M %*% A
 
 # This will perform the calculation, but not update M
-# M %*% A
+#M %*% A
 
 # This will result in an error because the dimensions do not match
-#  A %*% M
+#A %*% M
 ```
 
 ### Hint 2
@@ -113,27 +113,68 @@ Perform the following steps (we have already shown  1 and 2) to discover the sec
 
 1. Matrix-multiply M by A.
 
+```{r}
+M<-M %*% A
+```
+
 
 2. Multiply every row of M elementwise by x. 
+
+```{r}
+M<-t(M)*x
+M<-t(M)
+```
 
 
 3. Make a diagonal matrix called Y whose diagonal values are the elements of the vector y.  Matrix-multiply the inverse of Y by M.
 
+```{r}
+Y<-diag(y)
+M<-solve(Y) %*% M
+```
 
 4.  Calculate the determinant of B.  Add this scalar to every element of M.
+
+```{r}
+scl<-det(B)
+M<-M*scl
+```
 
 
 5. Use `eigen()` to find the eigenvalues and eigenvectors of B.  Find the sum of the third eigenvector of B. Multiply every element of M by this scalar.
 
+```{r}
+eB<-eigen(B)
+eBsum3<-sum(eB$vectors[,3])
+M<-M*eBsum3
+```
+
 
 6. Multiply each element of M by the corresponding element of the matrix formed by (xy')'.
 
+```{r}
+x<-matrix(x)
+y<-t(matrix(y))
+xy<-t(x%*%y)
+
+xy * t(M) 
+```
+
 
 7. Find the singular value decomposition H = UDV' using `svd()`.  Multiply each element of M by each element of 100*U. 
+```{r}
+U<-svd(H)$u
+U<-100*U
+U * M 
+```
 
 
 8. Calculate the sum of the singular values of H.  Divide *every* element of M by this scalar.
 
+```{r}
+dsum<-sum(svd(H)$d)
+M<-M*(dsum^.5)
+```
 
 ## The results
 
