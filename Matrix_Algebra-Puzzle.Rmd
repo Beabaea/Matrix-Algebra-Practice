@@ -137,7 +137,7 @@ M<-solve(Y) %*% M
 
 ```{r}
 scl<-det(B)
-M<-M*scl
+M<-M+scl
 ```
 
 
@@ -153,11 +153,9 @@ M<-M*eBsum3
 6. Multiply each element of M by the corresponding element of the matrix formed by (xy')'.
 
 ```{r}
-x<-matrix(x)
-y<-t(matrix(y))
-xy<-t(x%*%y)
-
-xy * t(M) 
+xy <- x %*% t(y)
+xy_t <- t(xy)
+M<- M * xy_t
 ```
 
 
@@ -165,7 +163,7 @@ xy * t(M)
 ```{r}
 U<-svd(H)$u
 U<-100*U
-U * M 
+M<-M * U 
 ```
 
 
